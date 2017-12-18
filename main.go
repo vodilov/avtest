@@ -32,8 +32,18 @@ type Stat struct {
 	durMax     time.Duration
 }
 
+func printResult(v *Stat) {
+	fmt.Println("\n====", v.testName, "====")
+	fmt.Println("Total:", v.durTotal)
+	fmt.Println("Average:", v.durAverage)
+	fmt.Println("Min:", v.durMin)
+	fmt.Println("Max:", v.durMax)
+}
+
 func main() {
-	var stat Stat
+	var (
+		stat *Stat
+	)
 
 	runtime.GOMAXPROCS(200)
 
@@ -48,8 +58,6 @@ func main() {
 	files, targzipfiles := generateData(*filePtr, *numbPtr)
 	//fmt.Println(files, targzipfiles)
 
-	results := []Stat{}
-
 	i360avService := "i360-clamd"
 	i360avScanCmd := "/opt/alt/i360av/bin/clamdscan"
 
@@ -60,104 +68,95 @@ func main() {
 
 	restartService(i360avService)
 	stat = CheckMultiFiles(i360avScanCmd, []string{files[0]}, 1)
-	stat.testName = "Single input file 1 goroutine"
-	results = append(results, stat)
+	stat.testName = i360avService + ": Single input file 1 goroutine"
+	printResult(stat)
 
 	restartService(i360avService)
 	stat = CheckMultiFiles(i360avScanCmd, []string{targzipfiles[0]}, 1)
-	stat.testName = "Single input file (gziped) 1 goroutine"
-	results = append(results, stat)
+	stat.testName = i360avService + ": Single input file (gziped) 1 goroutine"
+	printResult(stat)
 
 	restartService(i360avService)
 	stat = CheckMultiFiles(i360avScanCmd, []string{"archive.zip"}, 1)
-	stat.testName = "archive.zip 1 goroutine"
-	results = append(results, stat)
+	stat.testName = i360avService + ": archive.zip 1 goroutine"
+	printResult(stat)
 
 	restartService(i360avService)
 	stat = CheckMultiFiles(i360avScanCmd, files, 1)
-	stat.testName = "PHP files 1 goroutine"
-	results = append(results, stat)
+	stat.testName = i360avService + ": PHP files 1 goroutine"
+	printResult(stat)
 
 	restartService(i360avService)
 	stat = CheckMultiFiles(i360avScanCmd, files, 20)
-	stat.testName = "PHP files 20 goroutines"
-	results = append(results, stat)
+	stat.testName = i360avService + ": PHP files 20 goroutines"
+	printResult(stat)
 
 	restartService(i360avService)
 	stat = CheckMultiFiles(i360avScanCmd, files, 200)
-	stat.testName = "PHP files 200 goroutines"
-	results = append(results, stat)
+	stat.testName = i360avService + ": PHP files 200 goroutines"
+	printResult(stat)
 
 	restartService(i360avService)
 	stat = CheckMultiFiles(i360avScanCmd, targzipfiles, 1)
-	stat.testName = "tar.gz files 1 goroutine"
-	results = append(results, stat)
+	stat.testName = i360avService + ": tar.gz files 1 goroutine"
+	printResult(stat)
 
 	restartService(i360avService)
 	stat = CheckMultiFiles(i360avScanCmd, targzipfiles, 20)
-	stat.testName = "tar.gz files 20 goroutines"
-	results = append(results, stat)
+	stat.testName = i360avService + ": tar.gz files 20 goroutines"
+	printResult(stat)
 
 	restartService(i360avService)
 	stat = CheckMultiFiles(i360avScanCmd, targzipfiles, 200)
-	stat.testName = "tar.gz files 200 goroutines"
-	results = append(results, stat)
+	stat.testName = i360avService + ": tar.gz files 200 goroutines"
+	printResult(stat)
 
 	// immunify360 modsec
 
 	restartService(i360agentService)
 	stat = CheckMultiFiles(i360agentCmd, []string{files[0]}, 1)
-	stat.testName = "Single input file 1 goroutine"
-	results = append(results, stat)
+	stat.testName = i360agentService + ": Single input file 1 goroutine"
+	printResult(stat)
 
 	restartService(i360agentService)
 	stat = CheckMultiFiles(i360agentCmd, []string{targzipfiles[0]}, 1)
-	stat.testName = "Single input file (gziped) 1 goroutine"
-	results = append(results, stat)
+	stat.testName = i360agentService + ": Single input file (gziped) 1 goroutine"
+	printResult(stat)
 
 	restartService(i360agentService)
 	stat = CheckMultiFiles(i360agentCmd, []string{"archive.zip"}, 1)
-	stat.testName = "archive.zip 1 goroutine"
-	results = append(results, stat)
+	stat.testName = i360agentService + ": archive.zip 1 goroutine"
+	printResult(stat)
 
 	restartService(i360agentService)
 	stat = CheckMultiFiles(i360agentCmd, files, 1)
-	stat.testName = "PHP files 1 goroutine"
-	results = append(results, stat)
+	stat.testName = i360agentService + ": PHP files 1 goroutine"
+	printResult(stat)
 
 	restartService(i360agentService)
 	stat = CheckMultiFiles(i360agentCmd, files, 20)
-	stat.testName = "PHP files 20 goroutines"
-	results = append(results, stat)
+	stat.testName = i360agentService + ": PHP files 20 goroutines"
+	printResult(stat)
 
 	restartService(i360agentService)
 	stat = CheckMultiFiles(i360agentCmd, files, 200)
-	stat.testName = "PHP files 200 goroutines"
-	results = append(results, stat)
+	stat.testName = i360agentService + ": PHP files 200 goroutines"
+	printResult(stat)
 
 	restartService(i360agentService)
 	stat = CheckMultiFiles(i360agentCmd, targzipfiles, 1)
-	stat.testName = "tar.gz files 1 goroutine"
-	results = append(results, stat)
+	stat.testName = i360agentService + ": tar.gz files 1 goroutine"
+	printResult(stat)
 
 	restartService(i360agentService)
 	stat = CheckMultiFiles(i360agentCmd, targzipfiles, 20)
-	stat.testName = "tar.gz files 20 goroutines"
-	results = append(results, stat)
+	stat.testName = i360agentService + ": tar.gz files 20 goroutines"
+	printResult(stat)
 
 	restartService(i360agentService)
 	stat = CheckMultiFiles(i360agentCmd, targzipfiles, 200)
-	stat.testName = "tar.gz files 200 goroutines"
-	results = append(results, stat)
-
-	// print results
-	for _, v := range results {
-		fmt.Println("\n====", v.testName, "====")
-		fmt.Println("Total:", v.durTotal)
-		fmt.Println("Average:", v.durAverage)
-		fmt.Println("Min:", v.durMin)
-		fmt.Println("Max:", v.durMax)
-	}
+	stat.testName = i360agentService + ": tar.gz files 200 goroutines"
+	printResult(stat)
 
 	clearData()
 
@@ -186,13 +185,6 @@ func restartService(servname string) {
 	}
 	fmt.Print(string(cmdOutput.Bytes()))
 	time.Sleep(5 * time.Second)
-}
-
-func printResults(results []string) {
-
-	for _, st := range results {
-		fmt.Println(st)
-	}
 }
 
 func generateData(filename string, count int) (files, targzipfiles []string) {
@@ -235,7 +227,7 @@ func clearData() {
 	os.RemoveAll("archive.zip")
 }
 
-func CheckMultiFiles(e string, files []string, nGoroutines int) (stat Stat) {
+func CheckMultiFiles(e string, files []string, nGoroutines int) (stat *Stat) {
 	nTasks := len(files)
 
 	waitStart := sync.WaitGroup{}
@@ -300,7 +292,7 @@ func CheckMultiFiles(e string, files []string, nGoroutines int) (stat Stat) {
 
 	}
 	average := time.Duration(float64(total) / float64(len(sliceTasks)))
-	stat = Stat{
+	stat = &Stat{
 		nFiles:     len(sliceTasks),
 		durTotal:   durTotal,
 		durAverage: average,
