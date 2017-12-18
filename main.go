@@ -171,7 +171,7 @@ func checkTarget(e, filename string) {
 	if err != nil {
 		os.Stderr.WriteString(err.Error())
 	}
-	fmt.Print(string(cmdOutput.Bytes()))
+	//fmt.Print(string(cmdOutput.Bytes()))
 }
 
 func restartService(servname string) {
