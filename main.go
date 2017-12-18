@@ -185,7 +185,7 @@ func restartService(servname string) {
 		os.Stderr.WriteString(err.Error())
 	}
 	fmt.Print(string(cmdOutput.Bytes()))
-	time.Sleep(5 * time.Second)
+	time.Sleep(15 * time.Second)
 }
 
 func generateData(filename string, count int) (files, targzipfiles []string) {
