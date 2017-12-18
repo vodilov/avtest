@@ -168,9 +168,10 @@ func checkTarget(e, filename string) {
 	cmd.Stdout = cmdOutput
 	err := cmd.Run()
 	if err != nil {
-		os.Stderr.WriteString(err.Error())
+		fmt.Fprintln(os.Stderr, err.Error())
+		fmt.Fprintln(os.Stderr, cmdOutput.String())
 	}
-	//fmt.Print(string(cmdOutput.Bytes()))
+
 }
 
 func restartService(servname string) {
